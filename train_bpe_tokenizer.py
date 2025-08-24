@@ -13,7 +13,7 @@ def setup_args_parser():
     parser.add_argument('--output_dir', type=str, default='data', help="Directory to save vocab and merges")
 
     args = parser.parse_args()
-    args.run_name = f"BPE-Tokenizer-{time.strftime('%Y%m%d-%H%M%S')}"
+    args.run_name = f"Train-BPE-Tokenizer-{time.strftime('%Y%m%d-%H%M%S')}"
     return args
 
 

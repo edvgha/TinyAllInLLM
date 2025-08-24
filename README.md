@@ -19,3 +19,10 @@ Train BPE on the TinyStories data
 ``` sh
 python train_bpe_tokenizer.py --vocab_size=[vocab_size:int]
 ```
+
+### 3. Tokenize
+Encode text
+
+``` sh
+python python run_tokenizer.py
+```
