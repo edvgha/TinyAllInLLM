@@ -56,15 +56,16 @@ class RMSNorm(nn.Module):
         self.weight = nn.Parameter(torch.ones(d_model, device=self.device, dtype=self.dtype))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        in_dtype = x.dtype
-        x = x.to(torch.float32)
+        x_clone = x.clone()
+        in_dtype = x_clone.dtype
+        x_fp32 = x_clone.to(torch.float32)
 
-        rms = torch.einsum('...i,...i->...i', x, x)
-        rms = torch.einsum('...ij->...i', rms).div_(self.d_model).add_(self.eps).rsqrt_() 
+        rms = torch.einsum('...i,...i->...i', x_fp32, x_fp32)
+        rms = torch.einsum('...ij->...i', rms).div(self.d_model).add(self.eps).rsqrt()
 
-        x = torch.einsum('...ij,...i->...ij', x, rms)
-        x = torch.einsum('...i,i->...i', x, self.weight)
-        return x.to(in_dtype)
+        x_fp32 = torch.einsum('...ij,...i->...ij', x_fp32, rms)
+        x_fp32 = torch.einsum('...i,i->...i', x_fp32, self.weight)
+        return x_fp32.to(in_dtype)
 
 
 class SiLU(nn.Module):
@@ -76,7 +77,7 @@ class SiLU(nn.Module):
     
 
 class SwiGLU(nn.Module):
-    def __init__(self, d_model: int, d_ff: int = None, device: torch.device | None = None, dtype: torch.dtype | None = None):
+    def __init__(self, d_model: int, d_ff: int | None = None, device: torch.device | None = None, dtype: torch.dtype | None = None):
         super().__init__()
 
         d_ff = d_ff or 3 * d_model
@@ -105,7 +106,7 @@ class RoPE(nn.Module):
         inv_freq = 1.0 / (self.theta ** (torch.arange(0, dim, 2, device=self.device).float() / dim))
         self.register_buffer("inv_freq", inv_freq, persistent=False)
 
-        t = torch.arange(seq_len, device=self.inv_freq.device)
+        t = torch.arange(seq_len, device=inv_freq.device)
         emb = torch.einsum("i,j->ij", t, self.inv_freq)
 
         self.register_buffer("cos_cached", emb.cos(), persistent=False)
@@ -168,7 +169,7 @@ def scaled_dot_product_attention(Q: torch.Tensor, K: torch.Tensor, V: torch.Tens
 
 
 class CausalMultiHeadSelfAttention(nn.Module):
-    def __init__(self, d_model: int, num_heads: int, theta: float = None, max_seq_len: int = None, device: torch.device | None = None, dtype: torch.dtype | None = None):
+    def __init__(self, d_model: int, num_heads: int, theta: float | None = None, max_seq_len: int | None = None, device: torch.device | None = None, dtype: torch.dtype | None = None):
         super().__init__()
 
         self.num_heads = num_heads
@@ -180,12 +181,12 @@ class CausalMultiHeadSelfAttention(nn.Module):
 
         self.rope = None
         if theta is not None:
-            self.rope = RoPE(theta, d_model // num_heads, max_seq_len)
+            self.rope = RoPE(theta, d_model // num_heads, max_seq_len, device)
 
-    def forward(self, in_features: torch.Tensor, token_positions: torch.LongTensor = None) -> torch.Tensor:
+    def forward(self, in_features: torch.Tensor, token_positions: torch.LongTensor | None = None) -> torch.Tensor:
         batch_size, seq_len, _ = in_features.shape
 
-        mask = torch.tril(torch.ones(seq_len, seq_len)).bool()
+        mask = torch.tril(torch.ones(seq_len, seq_len, device=in_features.device)).bool()
         mask = einops.repeat(mask, 's1 s2 -> b s1 s2', b=batch_size) # [batch_size, seq_len, seq_len]
 
         Q = einops.rearrange(self.q_proj(in_features),  'b s (h d) -> h b s d', h=self.num_heads)

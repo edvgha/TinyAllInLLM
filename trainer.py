@@ -19,6 +19,9 @@ from data_loader import data_loading, save_checkpoint, load_checkpoint
 from losses import cross_entropy
 
 
+# torch.autograd.set_detect_anomaly(True)
+
+
 def set_seed(seed: int):
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -171,7 +174,7 @@ class Trainer:
                     self.logger.error(f'Error getting batch: {e}. Stop.')
                     break
 
-                _, logits = self.model(inputs)
+                logits = self.model(inputs)
                 self.optimizer.zero_grad(set_to_none=True)
                 loss = cross_entropy(logits, targets)
                 loss.backward()
