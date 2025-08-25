@@ -19,11 +19,17 @@ def setup_args_parser():
     parser.add_argument('--d_ff', type=int, default=64, help='Dimension of FF layer')
     parser.add_argument('--rope_theta', type=float, default=1000.0, help='Theat of the ROPE')
     # Optimizer args
-    parser.add_argument('--learning_rate', type=float, default=3e-4, help='Learning rate for AdamW')
     parser.add_argument('--weight_decay', type=float, default=1e-2, help='Weight decay for AdamW')
+    parser.add_argument('--grad_clip', type=float, default=1.0, help='Gradient clipping max L2 norm value (0 for no clipping)')
+    parser.add_argument('--max_lr', type=float, default=1e-3, help='Maximum learning rate')
+    parser.add_argument('--min_lr', type=float, default=1e-4, help='Minimum learning (final) rate')
+    parser.add_argument('--warmup_iters', type=int, default=1, help='Number of warm-up iterations')
+    parser.add_argument('--cosine_cycle_iters', type=int, default=10, help='Number of cosine annealing iterations')
     # Training args
     parser.add_argument('--batch_size', type=int, default=64, help='Batch size')
     parser.add_argument('--context_length', type=int, default=64, help='Context length for sequences')
+    parser.add_argument('--max_iters', type=int, default=50, help='Total number of training iterations')
+    parser.add_argument('--log_interval', type=int, default=10, help='Interval for logging training loss')
     # Checkpointing
     parser.add_argument('--checkpoint_dir', type=str, default='checkpoints', help='Directory to save checkpoints')
     parser.add_argument('--resume_from_checkpoint', type=str, default=None, help="Path to checkpoint to resume from (or 'latest')")

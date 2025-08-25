@@ -94,12 +94,13 @@ class Trainer:
                                               num_heads=self.args.num_heads, 
                                               d_ff=self.args.d_ff, 
                                               rope_theta=self.args.rope_theta, 
-                                              device=self.device)
+                                              device=self.device,
+                                              dtype=torch.float32)
         self.logger.info(f'Model: TransformerLanguageModel, Params: {sum(p.numel() for p in self.model.parameters() if p.requires_grad):,}')
     
     def _init_model_optimizer(self):
         self.optimizer = AdamW(self.model.parameters(), 
-                               lr=self.args.learning_rate, 
+                               lr=self.args.max_lr, 
                                weight_decay=self.args.weight_decay)
 
     def _load_data(self):
@@ -133,7 +134,10 @@ class Trainer:
             out_path_str = str(Path(self.args.checkpoint_dir) / f"ckpt_iter_{iter_to_save}.pth")
 
         save_checkpoint(self.logger, self.model, self.optimizer, iter_to_save, out_path_str)
-        self.logger.info(f'Checkpoint saved to {out_path_str}|Iter: {iter_to_save}|Val Loss: {self.best_val_loss:.4f}')
+        self.logger.info(f'Checkpoint saved to {out_path_str} | Iter: {iter_to_save} | Val Loss: {self.best_val_loss:.4f}')
+
+    def _get_batch(self, data: npt.NDArray) -> tuple[torch.Tensor, torch.Tensor]:
+        return data_loading(data, self.args.batch_size, self.args.context_length, self.device)
     
     def train(self):
         self.model.train()
@@ -141,10 +145,48 @@ class Trainer:
         initial_start_iter = self.current_iter
 
         try:
-            self.logger.info(f'TRAIN....')
-            self.current_iter = 10
-            self.best_val_loss = 0.234
-            # TODO
+            while self.current_iter < self.args.max_iters:
+                t_iter = time.time()
+
+                lr = lr_cosine_schedule(self.current_iter, 
+                                        self.args.max_lr, 
+                                        self.args.min_lr, 
+                                        self.args.warmup_iters, 
+                                        self.args.cosine_cycle_iters)
+                for param_group in self.optimizer.param_groups:
+                    param_group['lr'] = lr
+
+                # Evaluation
+                # TODO
+
+                # Periodic Checkpointing
+                # TODO
+
+                # Training Step 
+                try:
+                    inputs, targets = self._get_batch(self.train_data)
+                except ValueError as e:
+                    self.logger.error(f'Error getting batch: {e}. Stop.')
+                    break
+
+                _, logits = self.model(inputs)
+                self.optimizer.zero_grad(set_to_none=True)
+                loss = cross_entropy(logits, targets)
+                loss.backward()
+                if self.args.grad_clip > 0:
+                    gradient_clipping(self.model.parameters(), self.args.grad_clip)
+                self.optimizer.step()
+
+                if self.current_iter % self.args.log_interval == 0:
+                    dt_iter = (time.time() - t_iter) * 1000
+                    lossf = loss.item()
+                    self.logger.info(f'Iter {self.current_iter}/{self.args.max_iters} | loss {lossf:.4f} | time {dt_iter:.2f}ms | LR {lr:.1e}')
+                    self.tb_writer.add_scalar('Loss/train_step', lossf, self.current_iter)
+                    self.tb_writer.add_scalar('Timing/iter_time_ms', dt_iter, self.current_iter)
+                    self.tb_writer.add_scalar('LearningRate/current_lr', lr, self.current_iter)
+
+                self.current_iter += 1
+
         except KeyboardInterrupt:
             self.logger.info('Training interrupted by user.')
         finally:

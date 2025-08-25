@@ -1,6 +1,6 @@
 import torch
 
-def cross_entropy(logits: torch.Tensor, targets: torch.LongTensor) -> torch.Tensor:
+def cross_entropy(logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
     """
         logits: (batch_size, seq_len, vocab_len)
         targets: (batch_size, seq_len)

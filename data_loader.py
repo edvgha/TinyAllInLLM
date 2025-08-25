@@ -8,7 +8,7 @@ import numpy as np
 import numpy.typing as npt
 
 
-def data_loading(data: npt.NDArray, batch_size: int, context_length: int, device: str) -> tuple[torch.Tensor, torch.Tensor]:
+def data_loading(data: npt.NDArray, batch_size: int, context_length: int, device: torch.device) -> tuple[torch.Tensor, torch.Tensor]:
     if not isinstance(data, np.ndarray) or data.ndim != 1:
         raise ValueError("Input must be a 1D NumPy array")
     if not isinstance(data[0], np.integer):
@@ -69,16 +69,6 @@ def save_checkpoint(logger: logging.Logger,
     }
 
     torch.save(checkpoint, out)
-
-    if isinstance(out, (str, os.PathLike)):
-        logger.info(f"Checkpoint saved to '{out}' at iteration {iteration}")
-    elif hasattr(out, 'name'):
-        try:
-            logger.info(f"Checkpoint saved to file stream '{out.name}' at iteration {iteration}")
-        except AttributeError:
-            logger.info(f"Checkpoint saved to file stream at iteration {iteration}")
-    else:
-        logger.info(f"Checkpoint saved to file stream at iteration {iteration}")
 
 
 def load_checkpoint(logger: logging.Logger, 
