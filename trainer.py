@@ -38,6 +38,10 @@ class Trainer:
 
         self._setup_logging()
         self._setup_environment()
+        self._init_tensorboard()
+        self._init_model()
+        self._init_model_optimizer()
+        self._load_data()
 
     def _setup_logging(self):
         Path(self.args.log_dir).mkdir(parents=True, exist_ok=True)
@@ -61,6 +65,28 @@ class Trainer:
         self.device = torch.device(self.args.device)
         self.logger.info(f'Using device {self.device}')
         Path(self.args.checkpoint_dir).mkdir(parents=True, exist_ok=True)
+
+    def _init_tensorboard(self):
+        Path(self.args.tensorboard_log_dir).mkdir(parents=True, exist_ok=True)
+        self.tb_writer = SummaryWriter(log_dir=self.args.tensorboard_log_dir)
+        self.logger.info(f'TensorBoard logs will be saved ')
+
+    def _init_model(self):
+        self.model = TransformerLanguageModel(vocab_size=self.args.vocab_size, 
+                                              context_length=self.args.context_length, 
+                                              d_model=self.args.embedding_dim, 
+                                              num_layers=self.args.num_layers, 
+                                              num_heads=self.args.num_heads, 
+                                              d_ff=self.args.d_ff, 
+                                              rope_theta=self.args.rope_theta, 
+                                              device=self.device)
+        self.logger.info(f'Model: TransformerLanguageModel, Params: {sum(p.numel() for p in self.model.parameters() if p.requires_grad):,}')
+    
+    def _init_model_optimizer(self):
+        pass
+
+    def _load_data(self):
+        pass
 
     def train(self):
         for i in range(100):
