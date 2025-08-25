@@ -24,7 +24,7 @@ python train_bpe_tokenizer.py --vocab_size=[vocab_size:int]
 Encode text
 
 ``` sh
-python python run_tokenizer.py
+python run_tokenizer.py
 ```
 
 ### 4. Train TransformerLM

@@ -56,6 +56,7 @@ class RMSNorm(nn.Module):
         self.weight = nn.Parameter(torch.ones(d_model, device=self.device, dtype=self.dtype))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # To make it work with MPS backend
         x_clone = x.clone()
         in_dtype = x_clone.dtype
         x_fp32 = x_clone.to(torch.float32)
