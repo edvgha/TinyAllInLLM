@@ -26,6 +26,8 @@ def setup_args_parser():
     parser.add_argument('--context_length', type=int, default=64, help='Context length for sequences')
     # Checkpointing
     parser.add_argument('--checkpoint_dir', type=str, default='checkpoints', help='Directory to save checkpoints')
+    parser.add_argument('--resume_from_checkpoint', type=str, default=None, help="Path to checkpoint to resume from (or 'latest')")
+    parser.add_argument('--always_save_checkpoint', action='store_false', help='Always save last checkpoint on exit or max_iters')
     # Logging
     parser.add_argument('--log_dir', type=str, default='logs', help='Directory to save logs')
     parser.add_argument('--experiment_name', type=str, default='TransformerLM', help='Experiment name')

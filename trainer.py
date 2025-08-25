@@ -56,6 +56,7 @@ class Trainer:
         self._init_model()
         self._init_model_optimizer()
         self._load_data()
+        self._load_checkpoint_if_needed()
 
     def _setup_logging(self):
         Path(self.args.log_dir).mkdir(parents=True, exist_ok=True)
@@ -107,6 +108,61 @@ class Trainer:
         self.train_data = load_memmap_data(self.logger, str(train_data_path))
         self.val_data = load_memmap_data(self.logger, str(val_data_path))
 
+    def _load_checkpoint_if_needed(self):
+        if not self.args.resume_from_checkpoint:
+            return 
+                
+        ckpt_path_str = self.args.resume_from_checkpoint
+        if not ckpt_path_str or not os.path.exists(ckpt_path_str):
+            self.logger.warning(f"Checkpoint path '{ckpt_path_str}' not found or not specified. Starting fresh.")
+            return 
+
+        self.current_iter = load_checkpoint(self.logger, ckpt_path_str, self.model, self.optimizer)
+
+    @torch.no_grad()
+    def _estimate_loss(self) -> dict:
+        # TODO
+        return {}
+    
+    def _save_checkpoint(self, is_best: bool = False, iter_override: typing.Optional[int] = None):
+        iter_to_save = iter_override if iter_override is not None else self.current_iter
+
+        if is_best:
+            out_path_str = str(Path(self.args.checkpoint_dir) / f"best_ckpt_val{self.best_val_loss:.4f}_iter{iter_to_save}.pth")
+        else:
+            out_path_str = str(Path(self.args.checkpoint_dir) / f"ckpt_iter_{iter_to_save}.pth")
+
+        save_checkpoint(self.logger, self.model, self.optimizer, iter_to_save, out_path_str)
+        self.logger.info(f'Checkpoint saved to {out_path_str}|Iter: {iter_to_save}|Val Loss: {self.best_val_loss:.4f}')
+    
     def train(self):
-        for i in range(100):
-            self.logger.info(f'valod: {i}')
+        self.model.train()
+        t_start_training = time.time()
+        initial_start_iter = self.current_iter
+
+        try:
+            self.logger.info(f'TRAIN....')
+            self.current_iter = 10
+            self.best_val_loss = 0.234
+            # TODO
+        except KeyboardInterrupt:
+            self.logger.info('Training interrupted by user.')
+        finally:
+            total_training_time = time.time() - t_start_training
+            self.logger.info(f'Total training time: {total_training_time:.2f} seconds.')
+
+            if self.args.always_save_checkpoint and self.current_iter > initial_start_iter:
+                self.logger.info(f'Saving final checkpoint at iteration {self.current_iter}...')
+                self._save_checkpoint(is_best=False, iter_override=self.current_iter)
+
+            if self.current_iter > initial_start_iter or self.args.resume_from_checkpoint:
+                self.logger.info('Running final evaluation for TensorBoard...')
+                final_losses = self._estimate_loss()
+                self.tb_writer.add_scalar('Loss/final_val', final_losses.get('val_loss', float('nan')), self.current_iter)
+                self.tb_writer.add_scalar('Loss/final_train', final_losses.get('train_loss', float('nan')), self.current_iter)
+
+            if self.tb_writer:
+                self.tb_writer.close()
+                self.logger.info("TensorBoard writer closed.") 
+
+        self.logger.info("✅ Training complete.")

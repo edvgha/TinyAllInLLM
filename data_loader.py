@@ -1,10 +1,12 @@
-import numpy as np
-import numpy.typing as npt
+import os
+import logging
+import typing
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import os
-import typing
+import numpy as np
+import numpy.typing as npt
+
 
 def data_loading(data: npt.NDArray, batch_size: int, context_length: int, device: str) -> tuple[torch.Tensor, torch.Tensor]:
     if not isinstance(data, np.ndarray) or data.ndim != 1:
@@ -48,10 +50,11 @@ def data_loading(data: npt.NDArray, batch_size: int, context_length: int, device
     return inputs_tensor, targets_tensor
 
 
-def save_checkpoint(model: nn.Module,
-                   optimizer: optim.Optimizer,
-                   iteration: int,
-                   out: typing.Union[str, os.PathLike, typing.BinaryIO, typing.IO[bytes]]):
+def save_checkpoint(logger: logging.Logger, 
+                    model: nn.Module,
+                    optimizer: optim.Optimizer,
+                    iteration: int,
+                    out: typing.Union[str, os.PathLike, typing.BinaryIO, typing.IO[bytes]]):
     if not isinstance(model, nn.Module):
         raise TypeError('model must be a torch.nn.Module')
     if not isinstance(optimizer, optim.Optimizer):
@@ -68,17 +71,18 @@ def save_checkpoint(model: nn.Module,
     torch.save(checkpoint, out)
 
     if isinstance(out, (str, os.PathLike)):
-        print(f"Checkpoint saved to '{out}' at iteration {iteration}")
+        logger.info(f"Checkpoint saved to '{out}' at iteration {iteration}")
     elif hasattr(out, 'name'):
         try:
-            print(f"Checkpoint saved to file stream '{out.name}' at iteration {iteration}")
+            logger.info(f"Checkpoint saved to file stream '{out.name}' at iteration {iteration}")
         except AttributeError:
-            print(f"Checkpoint saved to file stream at iteration {iteration}")
+            logger.info(f"Checkpoint saved to file stream at iteration {iteration}")
     else:
-        print(f"Checkpoint saved to file stream at iteration {iteration}")
+        logger.info(f"Checkpoint saved to file stream at iteration {iteration}")
 
 
-def load_checkpoint(src: typing.Union[str, os.PathLike, typing.BinaryIO, typing.IO[bytes]],
+def load_checkpoint(logger: logging.Logger, 
+                    src: typing.Union[str, os.PathLike, typing.BinaryIO, typing.IO[bytes]],
                     model: nn.Module,
                     optimizer: optim.Optimizer) -> int:
     if not isinstance(model, nn.Module):
@@ -89,13 +93,13 @@ def load_checkpoint(src: typing.Union[str, os.PathLike, typing.BinaryIO, typing.
     try:
         model_device = next(model.parameters()).device
     except:
-        print("Warning: Model has no parameters")
+        logger.warning("Model has no parameters")
         model_device = torch.device('cpu')
 
     map_location = model_device
 
     src_display_name = src if isinstance(src, (str, os.PathLike)) else 'file-like object'
-    print(f"Loading checkpint from '{src_display_name}' with map_location='{str(map_location)}'")
+    logger.info(f"Loading checkpint from '{src_display_name}' with map_location='{str(map_location)}'")
 
     checkpoint = torch.load(src, map_location=map_location)
 
@@ -108,6 +112,6 @@ def load_checkpoint(src: typing.Union[str, os.PathLike, typing.BinaryIO, typing.
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     iteration = checkpoint['iteration']
 
-    print(f"Checkpint loaded. Resuming from iteration {iteration}")
+    logger.info(f"Checkpint loaded. Resuming from iteration {iteration}")
     return iteration
 
