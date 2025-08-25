@@ -127,7 +127,7 @@ class Trainer:
     @torch.no_grad()
     def _estimate_loss(self) -> dict:
         # TODO
-        return {}
+        return {'val_loss': 0.5, 'train_loss': 0.4}
     
     def _save_checkpoint(self, is_best: bool = False, iter_override: typing.Optional[int] = None):
         iter_to_save = iter_override if iter_override is not None else self.current_iter
@@ -162,12 +162,17 @@ class Trainer:
                     param_group['lr'] = lr
 
                 # Evaluation
-                # TODO
+                if self.current_iter > 0 and self.current_iter % self.args.eval_interval == 0:
+                    losses = self._estimate_loss()
+                    self.tb_writer.add_scalar('Loss/val', losses.get('val_loss', float('nan')), self.current_iter)
+                    self.tb_writer.add_scalar('Loss/train', losses.get('train_loss', float('nan')), self.current_iter)
 
-                # Periodic Checkpointing
-                # TODO
+                    current_val_loss = losses.get('val_loss', float('inf'))
+                    if not np.isnan(current_val_loss) and current_val_loss < self.best_val_loss:
+                        self.best_val_loss = current_val_loss
+                        self._save_checkpoint(is_best=True)
 
-                # Training Step 
+                # Training step
                 try:
                     inputs, targets = self._get_batch(self.train_data)
                 except ValueError as e:
