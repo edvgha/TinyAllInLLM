@@ -26,3 +26,10 @@ Encode text
 ``` sh
 python python run_tokenizer.py
 ```
+
+### 4. Train TransformerLM
+Encode text
+
+``` sh
+python python train.py --vocab_size=[vocab_size:int] [params ...]
+```
