@@ -6,7 +6,7 @@ from tokenizer import Tokenizer
 
 
 def setup_args_parser():
-    parser = argparse.ArgumentParser(description="Train a BPE tokenizer.")
+    parser = argparse.ArgumentParser(description="Tokenize provided text.")
 
     parser.add_argument('--data_dir', type=str, default='data', help="Directory containing input file")
     parser.add_argument('--input_file', type=str, default='TinyStoriesV2-GPT4-valid.txt', help="Input file to tokenize")
