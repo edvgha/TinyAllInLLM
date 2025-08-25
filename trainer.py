@@ -33,7 +33,7 @@ def load_memmap_data(logger: logging.Logger, file_path: str) -> npt.NDArray:
     logger.info(f'Loading memory-mapped data from {file_path}')
     try:
         data = np.load(file_path, mmap_mode='r')
-        logger.info(f'Successfully loaded. Shape: {data.shape}, dtype: {data.dtype}')
+        logger.info(f'📦 Successfully loaded. Shape: {data.shape}, dtype: {data.dtype}')
         return data
     except FileNotFoundError:
         logger.error(f'Data file not found at {file_path}')
@@ -78,13 +78,13 @@ class Trainer:
     def _setup_environment(self):
         set_seed(self.args.seed)
         self.device = torch.device(self.args.device)
-        self.logger.info(f'Using device {self.device}')
+        self.logger.info(f'💻 Using device {self.device}')
         Path(self.args.checkpoint_dir).mkdir(parents=True, exist_ok=True)
 
     def _init_tensorboard(self):
         Path(self.args.tensorboard_log_dir).mkdir(parents=True, exist_ok=True)
         self.tb_writer = SummaryWriter(log_dir=self.args.tensorboard_log_dir)
-        self.logger.info(f'TensorBoard logs will be saved ')
+        self.logger.info(f'📈 TensorBoard logs will be saved ')
 
     def _init_model(self):
         self.model = TransformerLanguageModel(vocab_size=self.args.vocab_size, 
@@ -96,12 +96,13 @@ class Trainer:
                                               rope_theta=self.args.rope_theta, 
                                               device=self.device,
                                               dtype=torch.float32)
-        self.logger.info(f'Model: TransformerLanguageModel, Params: {sum(p.numel() for p in self.model.parameters() if p.requires_grad):,}')
+        self.logger.info(f'🧠 Model: TransformerLanguageModel, Params: {sum(p.numel() for p in self.model.parameters() if p.requires_grad):,}')
     
     def _init_model_optimizer(self):
         self.optimizer = AdamW(self.model.parameters(), 
                                lr=self.args.max_lr, 
                                weight_decay=self.args.weight_decay)
+        self.logger.info(f'⚙️ Optimizer initialized')
 
     def _load_data(self):
         train_data_path = Path(self.args.data_dir) / self.args.train_file_name
@@ -140,6 +141,7 @@ class Trainer:
         return data_loading(data, self.args.batch_size, self.args.context_length, self.device)
     
     def train(self):
+        self.logger.info("🚀 Starting training!")
         self.model.train()
         t_start_training = time.time()
         initial_start_iter = self.current_iter
@@ -191,7 +193,7 @@ class Trainer:
             self.logger.info('Training interrupted by user.')
         finally:
             total_training_time = time.time() - t_start_training
-            self.logger.info(f'Total training time: {total_training_time:.2f} seconds.')
+            self.logger.info(f'Total training time: {total_training_time:.2f} seconds')
 
             if self.args.always_save_checkpoint and self.current_iter > initial_start_iter:
                 self.logger.info(f'Saving final checkpoint at iteration {self.current_iter}...')
@@ -205,6 +207,6 @@ class Trainer:
 
             if self.tb_writer:
                 self.tb_writer.close()
-                self.logger.info("TensorBoard writer closed.") 
+                self.logger.info("TensorBoard writer closed") 
 
-        self.logger.info("✅ Training complete.")
+        self.logger.info("✅ Training complete")
