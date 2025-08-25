@@ -29,6 +29,20 @@ def set_seed(seed: int):
         torch.mps.manual_seed(0)
 
 
+def load_memmap_data(logger: logging.Logger, file_path: str) -> npt.NDArray:
+    logger.info(f'Loading memory-mapped data from {file_path}')
+    try:
+        data = np.load(file_path, mmap_mode='r')
+        logger.info(f'Successfully loaded. Shape: {data.shape}, dtype: {data.dtype}')
+        return data
+    except FileNotFoundError:
+        logger.error(f'Data file not found at {file_path}')
+        raise
+    except Exception as e:
+        logger.error(f'Error loading data from {file_path}: {e}')
+        raise
+
+
 class Trainer:
     def __init__(self, args: argparse.Namespace):
         self.args = args
@@ -83,10 +97,15 @@ class Trainer:
         self.logger.info(f'Model: TransformerLanguageModel, Params: {sum(p.numel() for p in self.model.parameters() if p.requires_grad):,}')
     
     def _init_model_optimizer(self):
-        pass
+        self.optimizer = AdamW(self.model.parameters(), 
+                               lr=self.args.learning_rate, 
+                               weight_decay=self.args.weight_decay)
 
     def _load_data(self):
-        pass
+        train_data_path = Path(self.args.data_dir) / self.args.train_file_name
+        val_data_path = Path(self.args.data_dir) / self.args.val_file_name
+        self.train_data = load_memmap_data(self.logger, str(train_data_path))
+        self.val_data = load_memmap_data(self.logger, str(val_data_path))
 
     def train(self):
         for i in range(100):

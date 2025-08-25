@@ -83,7 +83,7 @@ def gradient_clipping(parameters: Iterable[torch.nn.Parameter], max_l2_norm: flo
     total_norm = 0.0
     for g in grads:
         total_norm += torch.sum(g * g)
-    total_norm = torch.sqrt(total_norm)
+    total_norm = math.sqrt(total_norm)
 
     if total_norm < max_l2_norm:
         return 

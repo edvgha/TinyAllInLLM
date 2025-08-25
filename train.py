@@ -7,6 +7,10 @@ import trainer
 def setup_args_parser():
     parser = argparse.ArgumentParser(description='Train a TransformerLM model.')
 
+    # Data args
+    parser.add_argument('--data_dir', type=str, default='data', help='Directory containing train.npy and val.npy')
+    parser.add_argument('--train_file_name', type=str, default='train.npy', help='Name of the training data file (tokens)')
+    parser.add_argument('--val_file_name', type=str, default='val.npy', help='Name of the validation data file (tokens)')
     # Model args
     parser.add_argument('--vocab_size', type=int, required=True, help='Vocabulary size (max token ID + 1)')
     parser.add_argument('--embedding_dim', type=int, default=32, help='Dimension of token embeddings and model dimension')
@@ -14,6 +18,9 @@ def setup_args_parser():
     parser.add_argument('--num_heads', type=int, default=2, help='Number of attention heads')
     parser.add_argument('--d_ff', type=int, default=64, help='Dimension of FF layer')
     parser.add_argument('--rope_theta', type=float, default=1000.0, help='Theat of the ROPE')
+    # Optimizer args
+    parser.add_argument('--learning_rate', type=float, default=3e-4, help='Learning rate for AdamW')
+    parser.add_argument('--weight_decay', type=float, default=1e-2, help='Weight decay for AdamW')
     # Training args
     parser.add_argument('--batch_size', type=int, default=64, help='Batch size')
     parser.add_argument('--context_length', type=int, default=64, help='Context length for sequences')
