@@ -28,8 +28,8 @@ python python run_tokenizer.py
 ```
 
 ### 4. Train TransformerLM
-Encode text
+Train the model
 
 ``` sh
-python python train.py --vocab_size=[vocab_size:int] [params ...]
+python train.py --vocab_size=[vocab_size:int] [params ...]
 ```
