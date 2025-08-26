@@ -205,7 +205,7 @@ class CausalMultiHeadSelfAttention(nn.Module):
     
 
 class TransformerBlock(nn.Module):
-    def __init__(self, d_model: int, num_heads: int, d_ff: int, theta: float = None, max_seq_len: int = None, device: torch.device | None = None, dtype: torch.dtype | None = None):
+    def __init__(self, d_model: int, num_heads: int, d_ff: int, theta: float | None = None, max_seq_len: int | None = None, device: torch.device | None = None, dtype: torch.dtype | None = None):
         super().__init__()
 
         self.ln1 = RMSNorm(d_model, device=device, dtype=dtype)

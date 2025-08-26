@@ -4,8 +4,6 @@ import typing
 import torch
 import argparse
 import logging
-import torch.nn as nn
-import torch.optim as optim
 import numpy as np
 import numpy.typing as npt
 from pathlib import Path

@@ -24,14 +24,14 @@ cd ..
 Train BPE on the TinyStories data
 
 ``` sh
-python train_bpe_tokenizer.py --vocab_size=[vocab_size:int]
+python train_bpe_tokenizer.py --vocab_size=[vocab_size:int] [params ...]
 ```
 
 ### 3. Encoding
 Tokenizing text
 
 ``` sh
-python run_tokenizer.py
+python run_tokenizer.py [params ...]
 ```
 
 ### 4. Train TransformerLM
@@ -45,5 +45,5 @@ python train.py --vocab_size=[vocab_size:int] [params ...]
 Generating text
 
 ``` sh
-TODO
+python decode.py --vocab_size=2500 --device=[device] --model_file=model.pth --promp='...' [params ...]
 ```
