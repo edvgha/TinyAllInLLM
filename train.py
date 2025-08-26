@@ -28,9 +28,10 @@ def setup_args_parser():
     # Training args
     parser.add_argument('--batch_size', type=int, default=64, help='Batch size')
     parser.add_argument('--context_length', type=int, default=64, help='Context length for sequences')
-    parser.add_argument('--max_iters', type=int, default=50, help='Total number of training iterations')
+    parser.add_argument('--max_iters', type=int, default=100, help='Total number of training iterations')
     parser.add_argument('--log_interval', type=int, default=10, help='Interval for logging training loss')
-    parser.add_argument('--eval_interval', type=int, default=10, help='Interval for validation evaluation')
+    parser.add_argument('--eval_interval', type=int, default=30, help='Interval for validation evaluation')
+    parser.add_argument('--eval_iters', type=int, default=30, help='Number of batches for loss estimation during eval')
     # Checkpointing
     parser.add_argument('--checkpoint_dir', type=str, default='checkpoints', help='Directory to save checkpoints')
     parser.add_argument('--resume_from_checkpoint', type=str, default=None, help="Path to checkpoint to resume from (or 'latest')")

@@ -1,4 +1,5 @@
 import torch
+import math
 
 def cross_entropy(logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
     """
@@ -14,5 +15,5 @@ def cross_entropy(logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
     return  loss
 
 
-def perplexity(logits: torch.Tensor, targets: torch.LongTensor) -> torch.Tensor:
-    return torch.exp(cross_entropy(logits, targets))
+def perplexity(loss: float) -> float:
+    return math.exp(loss)

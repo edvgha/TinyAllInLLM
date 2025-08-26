@@ -16,7 +16,7 @@ from datetime import datetime
 from modules import TransformerLanguageModel
 from adamw import AdamW, lr_cosine_schedule, gradient_clipping
 from data_loader import data_loading, save_checkpoint, load_checkpoint
-from losses import cross_entropy
+from losses import cross_entropy, perplexity
 
 
 # torch.autograd.set_detect_anomaly(True)
@@ -126,8 +126,63 @@ class Trainer:
 
     @torch.no_grad()
     def _estimate_loss(self) -> dict:
-        # TODO
-        return {'val_loss': 0.5, 'train_loss': 0.4}
+        self.model.eval()
+
+        losses = {'train_losses': torch.zeros(self.args.eval_iters, device=self.device), 
+                  'val_losses': torch.zeros(self.args.eval_iters, device=self.device)}
+
+        plexity = {'train_perplexity': torch.zeros(self.args.eval_iters, device=self.device),
+                   'val_perplexity': torch.zeros(self.args.eval_iters, device=self.device)}
+
+        for k in range(self.args.eval_iters):
+            try:
+                inputs, targets = self._get_batch(self.train_data)
+                logits = self.model(inputs)
+                loss = cross_entropy(logits, targets)
+                losses['train_losses'][k] = loss.item()
+                plexity['train_perplexity'][k] = perplexity(loss.item())
+            except ValueError as e:
+                self.logger.warning(f"Train loss estimation (iter {k}): {e}. Skipping batch.")
+                losses['train_losses'][k] = float('nan')
+                plexity['train_perplexity'][k] = float('nan')
+
+            try:
+                inputs, targets = self._get_batch(self.val_data)
+                logits = self.model(inputs)
+                loss = cross_entropy(logits, targets)
+                losses['val_losses'][k] = loss.item()
+                plexity['val_perplexity'][k] = perplexity(loss.item())
+            except ValueError as e:
+                self.logger.warning(f"Val loss estimation (iter {k}): {e}. Skipping batch.")
+                losses['val_losses'][k] = float('nan')
+                plexity['val_perplexity'][k] = float('nan')
+
+            losses['train_losses'] = losses['train_losses'][~torch.isnan(losses['train_losses'])]
+            losses['val_losses'] = losses['val_losses'][~torch.isnan(losses['val_losses'])]
+
+            plexity['train_perplexity'] = plexity['train_perplexity'][~torch.isnan(plexity['train_perplexity'])]
+            plexity['val_perplexity'] = plexity['val_perplexity'][~torch.isnan(plexity['val_perplexity'])]
+
+        out = {'train_loss': losses['train_losses'].mean().item(),
+               'val_loss': losses['val_losses'].mean().item(),
+               'train_perplexity': plexity['train_perplexity'].mean().item(),
+               'val_perplexity': plexity['val_perplexity'].mean().item()}
+
+        self.model.train()
+
+        train_loss_val = out.get('train_loss', float('nan'))
+        val_loss_val = out.get('val_loss', float('nan'))
+        perplexity_train = out.get('train_perplexity', float('nan'))
+        perplexity_val = out.get('val_perplexity', float('nan'))
+
+        log_str = f'Eval Iter {self.current_iter}/{self.args.max_iters}: '
+        if not np.isnan(train_loss_val): log_str += f'Train Loss {train_loss_val:.4f} | '
+        if not np.isnan(val_loss_val): log_str += f'Val Loss {val_loss_val:.4f} | '
+        if not np.isnan(perplexity_train): log_str += f'Train PPLXY {perplexity_train:.4f} | '
+        if not np.isnan(perplexity_val): log_str += f'Val PPLXY {perplexity_val:.4f}'
+        self.logger.info(log_str)
+
+        return out
     
     def _save_checkpoint(self, is_best: bool = False, iter_override: typing.Optional[int] = None):
         iter_to_save = iter_override if iter_override is not None else self.current_iter
@@ -166,6 +221,8 @@ class Trainer:
                     losses = self._estimate_loss()
                     self.tb_writer.add_scalar('Loss/val', losses.get('val_loss', float('nan')), self.current_iter)
                     self.tb_writer.add_scalar('Loss/train', losses.get('train_loss', float('nan')), self.current_iter)
+                    self.tb_writer.add_scalar('Perplexity/val', losses.get('val_perplexity', float('nan')), self.current_iter)
+                    self.tb_writer.add_scalar('Perplexity/train', losses.get('train_perplexity', float('nan')), self.current_iter)
 
                     current_val_loss = losses.get('val_loss', float('inf'))
                     if not np.isnan(current_val_loss) and current_val_loss < self.best_val_loss:
@@ -212,6 +269,8 @@ class Trainer:
                 final_losses = self._estimate_loss()
                 self.tb_writer.add_scalar('Loss/final_val', final_losses.get('val_loss', float('nan')), self.current_iter)
                 self.tb_writer.add_scalar('Loss/final_train', final_losses.get('train_loss', float('nan')), self.current_iter)
+                self.tb_writer.add_scalar('Perplexity/final_val', final_losses.get('val_perplexity', float('nan')), self.current_iter)
+                self.tb_writer.add_scalar('Perplexity/final_train', final_losses.get('train_perplexity', float('nan')), self.current_iter)
 
             if self.tb_writer:
                 self.tb_writer.close()
