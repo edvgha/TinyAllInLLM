@@ -36,5 +36,5 @@ if __name__ == '__main__':
     generator = decoder.Decoder(args)
     completion = generator.decode()
 
-    print(f"Prompt: '{args.prompt}'")
+    print(f"Prompt: '{args.prompt}' \n\n")
     print(f"Completion: '{completion}'")
