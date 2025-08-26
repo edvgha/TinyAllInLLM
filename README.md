@@ -41,7 +41,7 @@ Train the model
 python train.py --vocab_size=[vocab_size:int] [params ...]
 ```
 
-### 4. Decoding
+### 5. Decoding
 Generating text
 
 ``` sh
