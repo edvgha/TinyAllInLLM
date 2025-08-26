@@ -1,5 +1,12 @@
 # TinyAllInLLM
 
+### 0. Env setup
+Create environment
+
+``` sh
+conda env create -f environment.yml
+```
+
 ### 1. Download data
 Download the TinyStories data
 
