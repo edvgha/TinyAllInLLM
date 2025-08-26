@@ -52,7 +52,8 @@ class Decoder:
     @torch.no_grad()
     def decode(self) -> str:
         self.model.eval()
-
+        print(f'PROMPT: {self.args.prompt}')
+        print('-'*30)
         input_ids = self.tokenizer.encode(self.args.prompt)
         input_ids_tr = torch.tensor(np.array(input_ids), dtype=torch.long, device=self.device)
         input_ids_tr = einops.repeat(input_ids_tr, 's -> 1 s')
