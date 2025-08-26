@@ -45,5 +45,5 @@ python train.py --vocab_size=[vocab_size:int] [params ...]
 Generating text
 
 ``` sh
-python decode.py --vocab_size=2500 --device=[device] --model_file=model.pth --prompt='...' [params ...]
+python decode.py --vocab_size=[vocab_size:int] --device=[device:str] --model_file=[path:str] --prompt='...' [params ...]
 ```
