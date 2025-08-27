@@ -206,7 +206,7 @@ class Trainer:
             while self.current_iter < self.args.max_iters:
                 t_iter = time.time()
 
-                lr = lr_cosine_schedule(self.current_iter, 
+                lr = lr_cosine_schedule(self.current_iter + 1, 
                                         self.args.max_lr, 
                                         self.args.min_lr, 
                                         self.args.warmup_iters, 
@@ -245,7 +245,7 @@ class Trainer:
                 if self.current_iter % self.args.log_interval == 0:
                     dt_iter = (time.time() - t_iter) * 1000
                     lossf = loss.item()
-                    self.logger.info(f'Iter {self.current_iter}/{self.args.max_iters} | loss {lossf:.4f} | time {dt_iter:.2f}ms | LR {lr:.1e}')
+                    self.logger.info(f'Iter {self.current_iter}/{self.args.max_iters} | loss {lossf:.4f} | time {dt_iter:.2f}ms | LR {lr:.5f}')
                     self.tb_writer.add_scalar('Loss/train_step', lossf, self.current_iter)
                     self.tb_writer.add_scalar('Timing/iter_time_ms', dt_iter, self.current_iter)
                     self.tb_writer.add_scalar('LearningRate/current_lr', lr, self.current_iter)
