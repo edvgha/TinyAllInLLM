@@ -25,34 +25,37 @@ transformer architecture.
   * Data:
      | Data |
      | :--- |
-     | TinyStoriesV2-GPT4 |
+     | `TinyStoriesV2-GPT4` |
+
   * Machine:
      | Chip | Memory |
      | :--- | :--- |
-     | Apple M4 Pro | 24 GB |
+     | `Apple M4 Pro` | `24 GB` |
+
   * Eval:
      | Train loss | Val loss | Train perplexity | Val perplexity |
      | :--- | :--- | :--- | :--- |
-     | 1.439 | 1.447 | 4.22 | 4.25 |
+     | `1.439` | `1.447` | `4.22` | `4.25` |
+
   * Parameters:
-     |Parameter | Value | Description |
-     | :--- | :--- | :--- |
-     | `vocab_size` | `10000` | Your unique API key for authentication. |
-     | `embedding_dim` | `256` | The AI model to use for processing the request. |
-     | `num_layers` | `8` | Controls randomness (0.0 = deterministic, 1.0 = creative). |
-     | `num_heads` | `8` | The maximum number of tokens to generate in the response. |
-     | `d_ff` | `682` | If set to `true`, responses are streamed back incrementally. |
-     | `rope_theta` | `10000` | An array of filter objects to apply to the input. |
-     | `weight_decay` | `1e-5` | An array of filter objects to apply to the input. |
-     | `grad_clip` | `1.0` | An array of filter objects to apply to the input. |
-     | `max_lr` | `1e-3` | An array of filter objects to apply to the input. |
-     | `min_lr` | `1e-4` | An array of filter objects to apply to the input. |
-     | `warmup_iters` | `50` | An array of filter objects to apply to the input. |
-     | `cosine_cycle_iters` | `40000` | An array of filter objects to apply to the input. |
-     | `batch_size` | `128` | An array of filter objects to apply to the input. |
-     | `context_length` | `128` | An array of filter objects to apply to the input. |
-     | `max_iters` | `50000` | An array of filter objects to apply to the input. |
-     | `device` | `MPS` | An array of filter objects to apply to the input. |
+     |Parameter | Value |
+     | :--- | :--- |
+     | `vocab_size` | `10000` |
+     | `embedding_dim` | `256` |
+     | `num_layers` | `8` |
+     | `num_heads` | `8` |
+     | `d_ff` | `682` |
+     | `rope_theta` | `10000` |
+     | `weight_decay` | `1e-5` |
+     | `grad_clip` | `1.0` |
+     | `max_lr` | `1e-3` |
+     | `min_lr` | `1e-4` |
+     | `warmup_iters` | `50` |
+     | `cosine_cycle_iters` | `40000` |
+     | `batch_size` | `128` |
+     | `context_length` | `128` |
+     | `max_iters` | `50000` |
+     | `device` | `MPS` |
 
   * Decoding example:
     - Prompt: > ***The next day, Lily and her mom went to the part. They saw***
