@@ -33,6 +33,15 @@ transformer architecture. It was created with three primary goals in mind:
   * Decoding example:
     - Prompt: > *The next day, Lily and her mom went to the part. They saw*
     - Complition: > *The next day, Lily and her mom went to the park. They saw the big tree again. This time, Lily was ready. She saw the shiny, smooth, red fruit. She took a bite and said, "Wow, this fruit is so nice!" Her mom smiled and said, "Yes, it is. The star made the fruit so yummy. Let's eat it later." They both sat under the tree and enjoyed the rest of the day at the park.*
+  * Parameters:
+     Parameter | Type | Required | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `api_key` | `string` | Yes | - | Your unique API key for authentication. |
+| `model` | `string` | Yes | `gpt-4-turbo` | The AI model to use for processing the request. |
+| `temperature` | `number` | No | `0.7` | Controls randomness (0.0 = deterministic, 1.0 = creative). |
+| `max_tokens` | `integer` | No | `1000` | The maximum number of tokens to generate in the response. |
+| `stream` | `boolean` | No | `false` | If set to `true`, responses are streamed back incrementally. |
+| `filters` | `array` | No | `[]` | An array of filter objects to apply to the input. |
 
   
 ## Env setup
