@@ -38,11 +38,22 @@ transformer architecture.
      |Parameter | Value | Description |
      | :--- | :--- | :--- |
      | `vocab_size` | `10000` | Your unique API key for authentication. |
-     | `model` | `string` | The AI model to use for processing the request. |
-     | `temperature` | `number` | Controls randomness (0.0 = deterministic, 1.0 = creative). |
-     | `max_tokens` | `integer` | The maximum number of tokens to generate in the response. |
-     | `stream` | `boolean` | If set to `true`, responses are streamed back incrementally. |
-     | `filters` | `array` | An array of filter objects to apply to the input. |
+     | `embedding_dim` | `256` | The AI model to use for processing the request. |
+     | `num_layers` | `8` | Controls randomness (0.0 = deterministic, 1.0 = creative). |
+     | `num_heads` | `8` | The maximum number of tokens to generate in the response. |
+     | `d_ff` | `682` | If set to `true`, responses are streamed back incrementally. |
+     | `rope_theta` | `10000` | An array of filter objects to apply to the input. |
+     | `weight_decay` | `1e-5` | An array of filter objects to apply to the input. |
+     | `grad_clip` | `1.0` | An array of filter objects to apply to the input. |
+     | `max_lr` | `1e-3` | An array of filter objects to apply to the input. |
+     | `min_lr` | `1e-4` | An array of filter objects to apply to the input. |
+     | `warmup_iters` | `50` | An array of filter objects to apply to the input. |
+     | `cosine_cycle_iters` | `40000` | An array of filter objects to apply to the input. |
+     | `batch_size` | `128` | An array of filter objects to apply to the input. |
+     | `context_length` | `128` | An array of filter objects to apply to the input. |
+     | `max_iters` | `50000` | An array of filter objects to apply to the input. |
+     | `device` | `MPS` | An array of filter objects to apply to the input. |
+
   * Decoding example:
     - Prompt: > ***The next day, Lily and her mom went to the part. They saw***
     - Complition: > ***The next day, Lily and her mom went to the park. They saw the big tree again. This time, Lily was ready. She saw the shiny, smooth, red fruit. She took a bite and said, "Wow, this fruit is so nice!" Her mom smiled and said, "Yes, it is. The star made the fruit so yummy. Let's eat it later." They both sat under the tree and enjoyed the rest of the day at the park.***
