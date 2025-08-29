@@ -20,14 +20,14 @@ transformer architecture. It was created with three primary goals in mind:
 - [Decoding](#decoding)
 
 
-### Env setup
+## Env setup
 Create environment
 
 ``` sh
 conda env create -f environment.yml
 ```
 
-### 1. Download data
+## Download data
 Download the TinyStories data
 
 ``` sh
@@ -40,28 +40,28 @@ wget https://huggingface.co/datasets/roneneldan/TinyStories/resolve/main/TinySto
 cd ..
 ```
 
-### 2. Train BPE
+## Train BPE
 Train BPE on the TinyStories data
 
 ``` sh
 python train_bpe_tokenizer.py --vocab_size=[vocab_size:int] [params ...]
 ```
 
-### 3. Encoding
+## Encoding
 Tokenizing text
 
 ``` sh
 python run_tokenizer.py [params ...]
 ```
 
-### 4. Train TransformerLM
+## Train TransformerLM
 Train the model
 
 ``` sh
 python train.py --vocab_size=[vocab_size:int] [params ...]
 ```
 
-### 5. Decoding
+## Decoding
 Generating text
 
 ``` sh
