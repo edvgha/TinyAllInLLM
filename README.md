@@ -27,10 +27,9 @@ transformer architecture.
     - Chip: Apple M4 Pro
     - Memory: 24 GB
   * Eval:
-    - Train loss: 1.439
-    - Val loss: 1.447
-    - Train perplexity: 4.22
-    - Val perplexity: 4.25
+     | Train loss | Val loss | Train perplexity | Val perplexity |
+     | :--- | :--- | :--- | :--- |
+     | 1.439 | 1.447 | 4.22 | 4.25 |
   * Decoding example:
     - Prompt: > ***The next day, Lily and her mom went to the part. They saw***
     - Complition: > ***The next day, Lily and her mom went to the park. They saw the big tree again. This time, Lily was ready. She saw the shiny, smooth, red fruit. She took a bite and said, "Wow, this fruit is so nice!" Her mom smiled and said, "Yes, it is. The star made the fruit so yummy. Let's eat it later." They both sat under the tree and enjoyed the rest of the day at the park.***
