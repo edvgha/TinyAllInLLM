@@ -8,8 +8,8 @@ transformer architecture.
 * **Education:** To demystify the core mechanics of the transformer architecture by providing a clear codebase.
 * **Accessibility:** To create a model that can be trained and run without requiring expensive, high-end hardware.
 * **Simplicity:** To focus on a "from-scratch" approach with minimal dependencies.
-  
-![Alternative Text](https://github.com/edvgha/TinyAllInLLM/blob/main/img/loss.png)
+
+![plot](./img/loss.png)
 
 ## Table of Contents
 
