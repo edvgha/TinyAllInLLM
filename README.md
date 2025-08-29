@@ -34,9 +34,6 @@ transformer architecture.
      | Train loss | Val loss | Train perplexity | Val perplexity |
      | :--- | :--- | :--- | :--- |
      | 1.439 | 1.447 | 4.22 | 4.25 |
-  * Decoding example:
-    - Prompt: > ***The next day, Lily and her mom went to the part. They saw***
-    - Complition: > ***The next day, Lily and her mom went to the park. They saw the big tree again. This time, Lily was ready. She saw the shiny, smooth, red fruit. She took a bite and said, "Wow, this fruit is so nice!" Her mom smiled and said, "Yes, it is. The star made the fruit so yummy. Let's eat it later." They both sat under the tree and enjoyed the rest of the day at the park.***
   * Parameters:
      |Parameter | Value | Description |
      | :--- | :--- | :--- |
@@ -46,7 +43,9 @@ transformer architecture.
      | `max_tokens` | `integer` | The maximum number of tokens to generate in the response. |
      | `stream` | `boolean` | If set to `true`, responses are streamed back incrementally. |
      | `filters` | `array` | An array of filter objects to apply to the input. |
-
+  * Decoding example:
+    - Prompt: > ***The next day, Lily and her mom went to the part. They saw***
+    - Complition: > ***The next day, Lily and her mom went to the park. They saw the big tree again. This time, Lily was ready. She saw the shiny, smooth, red fruit. She took a bite and said, "Wow, this fruit is so nice!" Her mom smiled and said, "Yes, it is. The star made the fruit so yummy. Let's eat it later." They both sat under the tree and enjoyed the rest of the day at the park.***
   
 ## Env setup
 Create environment
