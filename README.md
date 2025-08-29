@@ -37,7 +37,7 @@ transformer architecture.
   * Parameters:
      |Parameter | Value | Description |
      | :--- | :--- | :--- |
-     | `api_key` | `string` | Your unique API key for authentication. |
+     | `vocab_size` | `10000` | Your unique API key for authentication. |
      | `model` | `string` | The AI model to use for processing the request. |
      | `temperature` | `number` | Controls randomness (0.0 = deterministic, 1.0 = creative). |
      | `max_tokens` | `integer` | The maximum number of tokens to generate in the response. |
