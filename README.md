@@ -2,7 +2,7 @@
 
 A lightweight language model built entirely from scratch, designed to be simple, understandable, and easy to train on a standard laptop.
 
-## 🎯 About the project
+## About the project
 **Tiny-All-In-LLM** is a minimalist, yet complete, implementation of the 
 transformer architecture. It was created with three primary goals in mind:
 * **Education:** To demystify the core mechanics of the transformer architecture by providing a clear and heavily commented codebase.
@@ -12,6 +12,7 @@ transformer architecture. It was created with three primary goals in mind:
 
 ## Table of Contents
 
+- [Experiment](#experiment)
 - [Env setup](#env-setup)
 - [Data](#download-data)
 - [Train BPE](#train-bpe)
@@ -19,6 +20,10 @@ transformer architecture. It was created with three primary goals in mind:
 - [Train TransformerLM](#train-transformer-lm)
 - [Decoding](#decoding)
 
+## Experiment
+  * Data: TinyStoriesV2-GPT4
+  * Hardware: MacBook
+  * Parameters
 
 ## Env setup
 Create environment
