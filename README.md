@@ -1,5 +1,7 @@
 # TinyAllInLLM
 
+A lightweight language model built entirely from scratch, designed to be simple, understandable, and easy to train on a standard laptop.
+
 ### 0. Env setup
 Create environment
 
