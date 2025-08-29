@@ -22,10 +22,14 @@ transformer architecture.
 - [Decoding](#decoding)
 
 ## Experiment
-  * Data: TinyStoriesV2-GPT4
+  * Data:
+     | Data |
+     | :--- |
+     | TinyStoriesV2-GPT4 |
   * Machine:
-    - Chip: Apple M4 Pro
-    - Memory: 24 GB
+     | Chip | Memory |
+     | :--- | :--- |
+     | Apple M4 Pro | 24 GB |
   * Eval:
      | Train loss | Val loss | Train perplexity | Val perplexity |
      | :--- | :--- | :--- | :--- |
