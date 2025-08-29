@@ -22,7 +22,9 @@ transformer architecture. It was created with three primary goals in mind:
 
 ## Experiment
   * Data: TinyStoriesV2-GPT4
-  * Hardware: MacBook
+  * Machine:
+    - Chip: Apple M4 Pro
+    - Memory 24 GB
   * Parameters
 
 ## Env setup
