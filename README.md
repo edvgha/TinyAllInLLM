@@ -24,9 +24,16 @@ transformer architecture. It was created with three primary goals in mind:
   * Data: TinyStoriesV2-GPT4
   * Machine:
     - Chip: Apple M4 Pro
-    - Memory 24 GB
-  * Parameters
+    - Memory: 24 GB
+  * Eval:
+    - Train loss: 1.439
+    - Val loss: 1.447
+    - Train perplexity: 4.22
+    - Val perplexity: 4.25
+  * Decoding example:
+    - Prompt: > *The next day, Lily and her mom went to the part. They saw*
 
+  
 ## Env setup
 Create environment
 
