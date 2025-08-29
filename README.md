@@ -10,7 +10,17 @@ transformer architecture. It was created with three primary goals in mind:
 * **Simplicity:** To focus on a "from-scratch" approach with minimal dependencies, allowing learners to understand every component.
 ![Alternative Text](https://github.com/edvgha/TinyAllInLLM/blob/main/doc/loss.png)
 
-### 0. Env setup
+## Table of Contents
+
+- [Env setup](#env-setup)
+- [Data](#download-data)
+- [Train BPE](#train-bpe)
+- [Encoding](#encoding)
+- [Train TransformerLM](#train-transformer-lm)
+- [Decoding](#decoding)
+
+
+### Env setup
 Create environment
 
 ``` sh
