@@ -57,6 +57,11 @@ transformer architecture.
      | `max_iters` | `50000` |
      | `device` | `MPS` |
 
+     |Parameter | Value |
+     | :--- | :--- |
+     | `temperature` | `1` |
+     | `top_p` | `0.8` |
+
   * Decoding example:
     - Prompt: > ***The next day, Lily and her mom went to the part. They saw***
     - Complition: > ***The next day, Lily and her mom went to the park. They saw the big tree again. This time, Lily was ready. She saw the shiny, smooth, red fruit. She took a bite and said, "Wow, this fruit is so nice!" Her mom smiled and said, "Yes, it is. The star made the fruit so yummy. Let's eat it later." They both sat under the tree and enjoyed the rest of the day at the park.***
