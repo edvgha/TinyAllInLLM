@@ -8,7 +8,7 @@ transformer architecture. It was created with three primary goals in mind:
 * **Education:** To demystify the core mechanics of the transformer architecture by providing a clear and heavily commented codebase.
 * **Accessibility:** To create a model that can be trained and run without requiring expensive, high-end hardware.
 * **Simplicity:** To focus on a "from-scratch" approach with minimal dependencies, allowing learners to understand every component.
-
+![Alternative Text](https://github.com/edvgha/TinyAllInLLM/blob/main/doc/loss.png)
 
 ### 0. Env setup
 Create environment
