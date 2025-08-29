@@ -4,10 +4,10 @@ A lightweight language model built entirely from scratch, designed to be simple,
 
 ## About the project
 **Tiny-All-In-LLM** is a minimalist, yet complete, implementation of the 
-transformer architecture. It was created with three primary goals in mind:
-* **Education:** To demystify the core mechanics of the transformer architecture by providing a clear and heavily commented codebase.
+transformer architecture.
+* **Education:** To demystify the core mechanics of the transformer architecture by providing a clear codebase.
 * **Accessibility:** To create a model that can be trained and run without requiring expensive, high-end hardware.
-* **Simplicity:** To focus on a "from-scratch" approach with minimal dependencies, allowing learners to understand every component.
+* **Simplicity:** To focus on a "from-scratch" approach with minimal dependencies.
 ![Alternative Text](https://github.com/edvgha/TinyAllInLLM/blob/main/doc/loss.png)
 
 ## Table of Contents
